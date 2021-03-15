@@ -1,0 +1,54 @@
+
+!|-------------------------------------------------------------------------  PVSYSTEM----------------------------------------------------------------------------------|
+
+!|----------------------------------------DEFINIÇÃO DAS CURVAS CARACTERÍSTICAS DO SISTEMA ----------------------------------------------|
+
+
+New XYcurve.MyPvsT npts=6 xarray= [0 5 25 50 75 100] yarray= [1.2 1.15 1 0.93 .8 .6]
+
+New XYcurve.MyEff npts=6 xarray= [.1 .2 .3 .4 .8 1] yarray= [.86 .88  .9 .93 .95 .97]
+
+//New XYcurve.MyPvsT2 npts=6 xarray= [0 5 25 50 75 100] yarray= [1.2 1.15 1 0.93 .8 .6]
+ 
+New XYcurve.MyEff2 npts=8 xarray= [.1 .2 .3 .5 .7 .8 .9 1] yarray= [.976 .982  .985 .985 .983 .982 .981 .9805]
+
+New loadshape.MyIrrad npts=24 interval=1
+~ mult=[0 0 0 0 0 0 .1 .2 .3 .5 .8 .9 1.0 1.0 .99 .9 .7 .4 .1 0 0 0 0 0 ]
+
+New Tshape.Mytemp npts=24 interval=1 
+~ temp= [ 25 25 25 25 25 25 25 25 30 35 40 45 50 60 65 50 55 40 30 33 25 25 25 25]
+
+!|----------------------------------------DEFINIÇÃO DOS SISTEMAS FOTOVOLTAICOS ----------------------------------------------|
+
+
+New PVSystem.PV1 phases=3 bus1=trafo_pv kv=0.600  pmpp=400 temperature=25 pf=1    
+// 1kw por metro quadrado
+~ %cutin=0.2 %cutout=0.2 effcurve=MyEff2 P-tCurve=MyPvsT Daily=MyIrrad Tdaily=Mytemp irradiance= 1
+ // se a potencia de entrada for maior que x ou menor que y cort
+
+New PVSystem.PV2 phases=3 bus1=trafo_pv2 kv=0.600  pmpp=500 temperature=25 pf=1   
+// 1kw por metro quadrado!
+~ %cutin=0.2 %cutout=0.2 effcurve=MyEff2 P-tCurve=MyPvsT Daily=MyIrrad Tdaily=Mytemp irradiance= 1
+ // se a potencia de entrada for maior que x ou menor que y corta
+
+New PVSystem.PV3 phases=3 bus1=trafo_pv3 kv=0.600  pmpp=600 temperature=25 pf=1   
+// 1kw por metro quadrado!
+~ %cutin=0.2 %cutout=0.2 effcurve=MyEff2 P-tCurve=MyPvsT Daily=MyIrrad Tdaily=Mytemp irradiance= 1
+ // se a potencia de entrada for maior que x ou menor que y corta
+
+
+
+!|--------------------------- TRANSFORMADORES ---------------------------------------|
+
+
+New Transformer.pv_up phases=3 xhl=5.750000
+~ wdg=1 bus=trafo_pv kv=0.600 kVA=5000  conn=wye
+~ wdg=2 bus=34 kv=4.16 kVA=5000  conn=wye
+
+New Transformer.pv_up2 phases=3 xhl=5.750000
+~ wdg=1 bus=trafo_pv2 kv=0.600 kVA=5000   conn=wye
+~ wdg=2 bus=28 kv=24.900 kVA=5000  conn=wye
+
+New Transformer.pv_up3 phases=3 xhl=5.750000
+~ wdg=1 bus=trafo_pv3 kv=0.600 kVA=5000   conn=wye
+~ wdg=2 bus=24 kv=24.900 kVA=5000  conn=wye

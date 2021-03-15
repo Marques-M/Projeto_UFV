@@ -1,0 +1,28 @@
+!------------------------------------------------------------------------------------
+! This script runs the IEEE 34 Bus test case (Mod 1)
+!------------------------------------------------------------------------------------
+
+! change the path name to match where it is actually installed on your computer
+
+Compile ieee34Mod1.dss
+
+New Energymeter.M1  Line.L1  1
+New monitor.L1 element = line.L2 terminal = 1 mode = 0
+New LoadShape.DIA npts=24	interval=1 mult= [0.69, 0.50, 0.44, 0.41, 0.55, 0.85, 1.01, 0.80, 0.89, 0.91, 1.02, 1.03, 1.11, 0.98, 0.94, 0.94, 1.02, 1.26, 1.51, 1.59, 1.75, 1.50, 1.29, 0.89,]
+Batchedit load..* daily = DIA
+
+Buscoords IEEE34_BusXY.csv
+
+set mode = daily
+set number = 24
+set stepsize = 1h
+solve
+
+Set MarkTransformers=yes
+Interpolate    ! requires an energyMeter
+!plot circuit Power max=2000 y y C1=$00FF0000
+
+!Plot profile phases=all
+
+Export monitors l1
+Plot monitor object= l1 channels=(1 3 5 )
